@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:unping_ui/unping_ui.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart';
+import 'package:widgetbook_workspace/components/shared/responsive_wrap.dart';
 
 import '../../utils/container.widgetbook.dart';
 
@@ -16,40 +17,41 @@ Widget badgeWithImage(BuildContext context) {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(children: [
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  child: Badges.badge(
-                    text: 'Label',
-                    leftWidget1: const BadgeImage(
-                      imageUrl: 'http://localhost:3845/assets/08a3b47613f2d0f6aced2c3c467602e3aa1638f1.png',
-                    ),
-                    size: BadgeSize.sm,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  child: Badges.badge(
-                    text: 'Label',
-                    leftWidget1: const BadgeImage(
-                      imageUrl: 'http://localhost:3845/assets/08a3b47613f2d0f6aced2c3c467602e3aa1638f1.png',
-                    ),
-                    size: BadgeSize.md,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  child: Badges.badge(
-                    text: 'Label',
-                    leftWidget1: const BadgeImage(
-                      imageUrl: 'http://localhost:3845/assets/08a3b47613f2d0f6aced2c3c467602e3aa1638f1.png',
-                    ),
-                    size: BadgeSize.lg,
-                  ),
-                ),
-              ]),
+        ResponsiveWrap(children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            child: Badges.badge(
+              text: 'Label',
+              leftWidget1: const BadgeImage(
+                imageUrl: 'http://localhost:3845/assets/08a3b4...f1.png',
+              ),
+              size: BadgeSize.sm,
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(16),
+            child: Badges.badge(
+              text: 'Label',
+              leftWidget1: const BadgeImage(
+                imageUrl: 'http://localhost:3845/assets/08a3b4...f1.png',
+              ),
+              size: BadgeSize.md,
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(16),
+            child: Badges.badge(
+              text: 'Label',
+              leftWidget1: const BadgeImage(
+                imageUrl: 'http://localhost:3845/assets/08a3b4...f1.png',
+              ),
+              size: BadgeSize.lg,
+            ),
+          ),
+        ]),
       // Image with removable option
-      Row(children: [
+
+       ResponsiveWrap(children: [
         Container(
           padding: const EdgeInsets.all(16),
           child: Badges.badge(
@@ -95,8 +97,8 @@ Widget badgeWithImage(BuildContext context) {
       ]
       ),
       // Image with Counters
-      Row(children: [
-        Container(
+        ResponsiveWrap(children: [
+          Container(
           padding: const EdgeInsets.all(16),
           child: Badges.badge(
             text: 'Label',
@@ -132,7 +134,7 @@ Widget badgeWithImage(BuildContext context) {
       ]
       ),
       // Image with Checkbox
-      Row(children: [
+       ResponsiveWrap(children: [
         Container(
           padding: const EdgeInsets.all(16),
           child: Badges.badge(
@@ -169,7 +171,7 @@ Widget badgeWithImage(BuildContext context) {
       ]
       ),
       // Image with Checkbox removable
-      Row(children: [
+       ResponsiveWrap(children: [
         Container(
           padding: const EdgeInsets.all(16),
           child: Badges.badge(
@@ -218,7 +220,7 @@ Widget badgeWithImage(BuildContext context) {
       ]
       ),
       // Image with Checkbox and Count
-      Row(children: [
+      ResponsiveWrap(children: [
         Container(
           padding: const EdgeInsets.all(16),
           child: Badges.badge(
@@ -273,7 +275,7 @@ Widget badge(BuildContext context) {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(children: [
+        ResponsiveWrap(children: [
                 Container(
                   padding: const EdgeInsets.all(16),
                   child: Badges.badge(
@@ -297,7 +299,7 @@ Widget badge(BuildContext context) {
         ),
       ]),
       // Image with removable option
-      Row(children: [
+       ResponsiveWrap(children: [
         Container(
           padding: const EdgeInsets.all(16),
           child: Badges.badge(
@@ -334,7 +336,7 @@ Widget badge(BuildContext context) {
       ]
       ),
       // Image with Counters
-      Row(children: [
+      ResponsiveWrap(children: [
         Container(
           padding: const EdgeInsets.all(16),
           child: Badges.badge(
@@ -362,7 +364,7 @@ Widget badge(BuildContext context) {
       ]
       ),
       // Image with Checkbox
-      Row(children: [
+      ResponsiveWrap(children: [
         Container(
           padding: const EdgeInsets.all(16),
           child: Badges.badge(
@@ -390,7 +392,7 @@ Widget badge(BuildContext context) {
       ]
       ),
       // Image with Checkbox removable
-      Row(children: [
+       ResponsiveWrap(children: [
         Container(
           padding: const EdgeInsets.all(16),
           child: Badges.badge(
@@ -430,7 +432,7 @@ Widget badge(BuildContext context) {
       ]
       ),
       // Image with Checkbox and Count
-      Row(children: [
+       ResponsiveWrap(children: [
         Container(
           padding: const EdgeInsets.all(16),
           child: Badges.badge(
@@ -478,7 +480,7 @@ Widget badgeWithWidget(BuildContext context) {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Basic dot examples
-        Row(children: [
+        ResponsiveWrap(children: [
                 Container(
                   padding: const EdgeInsets.all(16),
                   child: Badges.badge(
@@ -505,7 +507,7 @@ Widget badgeWithWidget(BuildContext context) {
         ),
       ]),
       // Dot with removable option
-      Row(children: [
+      ResponsiveWrap(children: [
         Container(
           padding: const EdgeInsets.all(16),
           child: Badges.badge(
@@ -545,7 +547,7 @@ Widget badgeWithWidget(BuildContext context) {
       ]
       ),
       // Dot with Counters
-      Row(children: [
+       ResponsiveWrap(children: [
         Container(
           padding: const EdgeInsets.all(16),
           child: Badges.badge(
@@ -576,7 +578,7 @@ Widget badgeWithWidget(BuildContext context) {
       ]
       ),
       // Dot with Checkbox (matching Figma design)
-      Row(children: [
+       ResponsiveWrap(children: [
         Container(
           padding: const EdgeInsets.all(16),
           child: Badges.badge(
@@ -607,7 +609,7 @@ Widget badgeWithWidget(BuildContext context) {
       ]
       ),
       // Dot with Checkbox removable
-      Row(children: [
+       ResponsiveWrap(children: [
         Container(
           padding: const EdgeInsets.all(16),
           child: Badges.badge(
@@ -650,7 +652,7 @@ Widget badgeWithWidget(BuildContext context) {
       ]
       ),
       // Dot with Checkbox and Count (matching Figma design)
-      Row(children: [
+      ResponsiveWrap(children: [
         Container(
           padding: const EdgeInsets.all(16),
           child: Badges.badge(
@@ -696,11 +698,11 @@ Widget badgeWithWidget(BuildContext context) {
 )
 Widget badgeCheckboxComponent(BuildContext context) {
   return UnpingUIContainer(
-    breadcrumbs: ['Components', 'Badge'],
+    breadcrumbs: const ['Components', 'Badge'],
     child: StatefulBuilder(
       builder: (context, setState) {
         bool isChecked = false;
-        
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -710,25 +712,24 @@ Widget badgeCheckboxComponent(BuildContext context) {
               child: Badges.checkbox(
                 isChecked: isChecked,
                 onChanged: (value) {
-                setState(() {
-                  isChecked = value;
-                });
-              },
+                  setState(() {
+                    isChecked = value;
+                  });
+                },
+              ),
             ),
-          ),
-          // Static checkboxes for visual reference
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(16),
+
+            // Static checkboxes for visual reference
+            ResponsiveWrap(children: [
+              Padding(
+                padding: EdgeInsets.all(16),
                 child: Badges.checkbox(isChecked: false),
               ),
-              Container(
-                padding: const EdgeInsets.all(16),
+              Padding(
+                padding: EdgeInsets.all(16),
                 child: Badges.checkbox(isChecked: true),
               ),
-            ],
-          ),
+            ]),
           ],
         );
       },
@@ -764,7 +765,7 @@ Widget interactiveBadgeWithCheckbox(BuildContext context) {
         bool isChecked1 = false;
         bool isChecked2 = true;
         bool isChecked3 = false;
-        
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -777,7 +778,7 @@ Widget interactiveBadgeWithCheckbox(BuildContext context) {
             ),
           ),
           SizedBox(height: 16),
-          Row(children: [
+            ResponsiveWrap(children: [
             Container(
               padding: const EdgeInsets.all(16),
               child: Badges.badge(
@@ -826,7 +827,7 @@ Widget interactiveBadgeWithCheckbox(BuildContext context) {
           ]),
           SizedBox(height: 16),
           // With removable and counter
-          Row(children: [
+           ResponsiveWrap(children: [
             Container(
               padding: const EdgeInsets.all(16),
               child: Badges.badge(

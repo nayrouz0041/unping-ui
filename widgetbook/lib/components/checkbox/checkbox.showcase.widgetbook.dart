@@ -3,6 +3,8 @@ import 'package:unping_ui/unping_ui.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 import 'package:widgetbook_workspace/utils/container.widgetbook.dart';
 
+import '../shared/responsive_wrap.dart';
+
 @UseCase(
   name: 'Checkbox',
   type: BaseCheckbox,
@@ -15,7 +17,7 @@ Widget checkbox(BuildContext context) {
     child: Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Row(children: [
+      ResponsiveWrap(children: [
         Container(
           padding: const EdgeInsets.all(16),
           child: Checkboxes.checkbox(
@@ -44,7 +46,7 @@ Widget checkbox(BuildContext context) {
           ),
         ),
       ]),
-      Row(children: [
+      ResponsiveWrap(children: [
         Container(
           padding: const EdgeInsets.all(16),
           child: Checkboxes.checkbox(
@@ -73,7 +75,7 @@ Widget checkbox(BuildContext context) {
           ),
         ),
       ]),
-      Row(children: [
+      ResponsiveWrap(children: [
         Container(
           padding: const EdgeInsets.all(16),
           child: Checkboxes.checkbox(
@@ -102,7 +104,7 @@ Widget checkbox(BuildContext context) {
           ),
         ),
       ]),
-      Row(children: [
+      ResponsiveWrap(children: [
         Container(
           padding: const EdgeInsets.all(16),
           child: Checkboxes.checkbox(
@@ -131,7 +133,7 @@ Widget checkbox(BuildContext context) {
           ),
         ),
       ]),
-      Row(
+      ResponsiveWrap(
         children: [
           Container(
             padding: const EdgeInsets.all(16),
@@ -168,7 +170,7 @@ Widget checkbox(BuildContext context) {
           ),
         ],
       ),
-      Row(
+      ResponsiveWrap(
         children: [
           Container(
             padding: const EdgeInsets.all(16),
@@ -205,7 +207,7 @@ Widget checkbox(BuildContext context) {
           ),
         ],
       ),
-      Row(
+      ResponsiveWrap(
         children: [
           Container(
             padding: const EdgeInsets.all(16),

@@ -4,6 +4,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 // Import the widget from your app
 import 'package:unping_ui/unping_ui.dart';
+import 'package:widgetbook_workspace/components/shared/responsive_wrap.dart';
 import 'package:widgetbook_workspace/utils/container.widgetbook.dart';
 
 /// Example stateful checkbox widget for demonstration in Widgetbook
@@ -135,21 +136,22 @@ Widget buildConfigurableBadge(BuildContext context) {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            child: Badges.badge(
-              text: badgeText.isEmpty ? 'Label' : badgeText,
-              leftWidget1: leftWidget1,
-              leftWidget2: leftWidget2,
-              rightWidget: rightWidget,
-              size: size,
-              textColor: textColor ?? UiColors.onPrimary,
-              removable: isRemovable,
-              onRemove: isRemovable ? () {
-                // Handle remove action in widgetbook
-              } : null,
+          ResponsiveWrap(children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              child: Badges.badge(
+                text: badgeText.isEmpty ? 'Label' : badgeText,
+                leftWidget1: leftWidget1,
+                leftWidget2: leftWidget2,
+                rightWidget: rightWidget,
+                size: size,
+                textColor: textColor ?? UiColors.onPrimary,
+                removable: isRemovable,
+                onRemove: isRemovable ? () {} : null,
+              ),
             ),
-          ),
+          ])
+
         ])
       ],
     ),

@@ -6,6 +6,8 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 import 'package:unping_ui/unping_ui.dart';
 import 'package:widgetbook_workspace/utils/container.widgetbook.dart';
 
+import '../shared/responsive_wrap.dart';
+
 /// Example stateful checkbox widget for demonstration in Widgetbook
 class _ExampleCheckbox extends StatefulWidget {
   final CheckboxSize size;
@@ -191,7 +193,7 @@ Widget buildConfigurableCheckbox(BuildContext context) {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
+        ResponsiveWrap(
           children: [
             Container(
               padding: const EdgeInsets.all(16),
