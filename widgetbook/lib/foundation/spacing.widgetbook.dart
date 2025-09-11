@@ -1,9 +1,49 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:unping_ui/unping_ui.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 import 'package:widgetbook_workspace/utils/background.widgetbook.dart';
 import '../utils/header.widgetbook.dart';
 import '../utils/description.widgetbook.dart';
+
+const double _kNameW = 120;
+const double _kRemW = 160;
+const double _kPxW = 128;
+const double _kDefaultPadRight = 64;
+const double _kGraphMin = 400;
+const double _kTableMinWidth =
+    _kNameW + _kRemW + _kPxW + (4 * _kDefaultPadRight) + _kGraphMin;
+
+double _gapForWidth(BuildContext context) {
+  final w = MediaQuery.sizeOf(context).width;
+  if (w < 480) return 12;
+  if (w < 640) return 16;
+  if (w < 900) return 24;
+  return _kDefaultPadRight;
+}
+
+/// Auto-shrinks text to fit horizontally without a plugin.
+class _AutoText extends StatelessWidget {
+  const _AutoText(this.text, this.style, {this.maxLines = 1, super.key});
+  final String text;
+  final TextStyle style;
+  final int maxLines;
+
+  @override
+  Widget build(BuildContext context) {
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.centerLeft,
+      child: Text(
+        text,
+        style: style,
+        maxLines: maxLines,
+        overflow: TextOverflow.visible,
+        softWrap: false,
+      ),
+    );
+  }
+}
 
 @UseCase(
   name: 'Spacing System',
@@ -16,111 +56,65 @@ Widget buildUiSpacingUseCase(BuildContext context) {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Header section
+        // Header
         Container(
-          padding: UiSpacing.allXxl,
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Navigation breadcrumb using predefined header
-                UnpingUiWidgetbookHeader(
-                  breadcrumbs: const ['Foundation', 'Spacing'],
-                  title: "Spacing",
-                ),
-                const SizedBox(height: UiSpacing.spacing4),
-                
-                // Description section using the reusable component
-                UnpingUiWidgetbookDescription(
-                  description: 'Consistent and well-defined spacing is crucial for creating a visually balanced and user-friendly interface. Our design system includes a comprehensive set of spacing guidelines to ensure consistency and clarity across all user interfaces. These guidelines help maintain a cohesive layout and improve the overall user experience.\n\n',
-                  lists: {
-                    'Spacing Scale:': [
-                      'Based on a 4px base unit for mathematical consistency.',
-                      'Ranges from 0px to 1,920px to cover all design needs.',
-                      'Follows a logical progression for predictable scaling.',
-                      'Includes fractional values (0.5, 1, 2, 3) for fine-tuned control.',
-                    ],
-                    'Usage Guidelines:': [
-                      'Use smaller values (0-24px) for component-level spacing.',
-                      'Use medium values (32-96px) for section and layout spacing.',
-                      'Use larger values (120px+) for page-level margins and major sections.',
-                      'Maintain consistency by using predefined spacing values.',
-                    ],
-                  }
-                ),
-              ],
-          ),
-        ),
-        
-        // Spacing table
-        Container(
-          width: double.infinity,
           padding: UiSpacing.allXxl,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Table header
-              Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: UiColors.neutral200, width: 1),
+              UnpingUiWidgetbookHeader(
+                breadcrumbs: const ['Foundation', 'Spacing'],
+                title: 'Spacing',
+              ),
+              const SizedBox(height: UiSpacing.spacing4),
+              UnpingUiWidgetbookDescription(
+                description:
+                'Consistent and well-defined spacing is crucial for creating a visually balanced and user-friendly interface. Our design system includes a comprehensive set of spacing guidelines to ensure consistency and clarity across all user interfaces. These guidelines help maintain a cohesive layout and improve the overall user experience.\n\n',
+                lists: {
+                  'Spacing Scale:': [
+                    'Based on a 4px base unit for mathematical consistency.',
+                    'Ranges from 0px to 1,920px to cover all design needs.',
+                    'Follows a logical progression for predictable scaling.',
+                    'Includes fractional values (0.5, 1, 2, 3) for fine-tuned control.',
+                  ],
+                  'Usage Guidelines:': [
+                    'Use smaller values (0-24px) for component-level spacing.',
+                    'Use medium values (32-96px) for section and layout spacing.',
+                    'Use larger values (120px+) for page-level margins and major sections.',
+                    'Maintain consistency by using predefined spacing values.',
+                  ],
+                },
+              ),
+            ],
+          ),
+        ),
+
+        // TABLE (fixed width via LayoutBuilder + horizontal scroll)
+        Container(
+          width: double.infinity,
+          padding: UiSpacing.allXxl,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              // Give the table a definite width so every box has a size during layout .
+              final tableWidth =
+              math.max(_kTableMinWidth, constraints.maxWidth);
+
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                clipBehavior: Clip.hardEdge,
+                child: SizedBox(
+                  width: tableWidth,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _SpacingHeader(),
+                      const SizedBox(height: 12),
+                      ..._buildSpacingRows(),
+                    ],
                   ),
                 ),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 120, // Min width from Figma
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 16, right: 64),
-                        child: Text(
-                          'Name',
-                          style: UiTextStyles.textXsMedium.copyWith(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 160, // Increased width to prevent line break
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 16, right: 64),
-                        child: Text(
-                          'Size (16px base)',
-                          style: UiTextStyles.textXsMedium.copyWith(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 128, // Min width from Figma
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 16, right: 64),
-                        child: Text(
-                          'Pixel',
-                          style: UiTextStyles.textXsMedium.copyWith(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 16, right: 64),
-                        child: Text(
-                          'Spacing',
-                          style: UiTextStyles.textXsMedium.copyWith(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 12), // Spacer between header and content
-              // Table content
-              ..._buildSpacingRows(),
-            ],
+              );
+            },
           ),
         ),
       ],
@@ -128,8 +122,64 @@ Widget buildUiSpacingUseCase(BuildContext context) {
   );
 }
 
+class _SpacingHeader extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final gap = _gapForWidth(context);
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: UiColors.neutral200, width: 1),
+        ),
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: _kNameW,
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 16, right: gap),
+              child: _AutoText(
+                'Name',
+                UiTextStyles.textXsMedium.copyWith(color: Colors.white),
+              ),
+            ),
+          ),
+          SizedBox(
+            width: _kRemW,
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 16, right: gap),
+              child: _AutoText(
+                'Size (16px base)',
+                UiTextStyles.textXsMedium.copyWith(color: Colors.white),
+              ),
+            ),
+          ),
+          SizedBox(
+            width: _kPxW,
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 16, right: gap),
+              child: _AutoText(
+                'Pixel',
+                UiTextStyles.textXsMedium.copyWith(color: Colors.white),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 16, right: gap),
+              child: _AutoText(
+                'Spacing',
+                UiTextStyles.textXsMedium.copyWith(color: Colors.white),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 List<Widget> _buildSpacingRows() {
-  // All spacing values from the Figma design and UiSpacing class
   final spacingData = [
     {'name': '0', 'rem': '0rem', 'px': '0px', 'value': UiSpacing.spacing0},
     {'name': '0.5', 'rem': '0.125rem', 'px': '2px', 'value': UiSpacing.spacing0_5},
@@ -164,12 +214,14 @@ List<Widget> _buildSpacingRows() {
     {'name': '480', 'rem': '120rem', 'px': '1,920px', 'value': UiSpacing.spacing480},
   ];
 
-  return spacingData.map((data) => _SpacingRow(
+  return spacingData
+      .map((data) => _SpacingRow(
     name: data['name'] as String,
     rem: data['rem'] as String,
     px: data['px'] as String,
-    value: data['value'] as double,
-  )).toList();
+    value: (data['value'] as double),
+  ))
+      .toList();
 }
 
 class _SpacingRow extends StatelessWidget {
@@ -187,6 +239,8 @@ class _SpacingRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final gap = _gapForWidth(context);
+
     return Container(
       decoration: const BoxDecoration(
         border: Border(
@@ -195,11 +249,10 @@ class _SpacingRow extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Name column with badge
           SizedBox(
-            width: 120,
+            width: _kNameW,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 0).copyWith(right: 64),
+              padding: EdgeInsets.symmetric(vertical: 12).copyWith(right: gap),
               child: Badges.badge(
                 text: name,
                 size: BadgeSize.md,
@@ -209,36 +262,29 @@ class _SpacingRow extends StatelessWidget {
               ),
             ),
           ),
-          // Rem size column
           SizedBox(
-            width: 160,
+            width: _kRemW,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 0).copyWith(right: 64),
-              child: Text(
+              padding: EdgeInsets.symmetric(vertical: 12).copyWith(right: gap),
+              child: _AutoText(
                 rem,
-                style: UiTextStyles.textSm.copyWith(
-                  color: Colors.white,
-                ),
+                UiTextStyles.textSm.copyWith(color: Colors.white),
               ),
             ),
           ),
-          // Pixel size column
           SizedBox(
-            width: 128,
+            width: _kPxW,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 0).copyWith(right: 64),
-              child: Text(
+              padding: EdgeInsets.symmetric(vertical: 12).copyWith(right: gap),
+              child: _AutoText(
                 px,
-                style: UiTextStyles.textSm.copyWith(
-                  color: Colors.white,
-                ),
+                UiTextStyles.textSm.copyWith(color: Colors.white),
               ),
             ),
           ),
-          // Spacing visualization column
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 0).copyWith(right: 64),
+              padding: EdgeInsets.symmetric(vertical: 12).copyWith(right: gap),
               child: _SpacingVisualization(value: value),
             ),
           ),
@@ -250,52 +296,46 @@ class _SpacingRow extends StatelessWidget {
 
 class _SpacingVisualization extends StatelessWidget {
   const _SpacingVisualization({required this.value});
-
   final double value;
 
   @override
   Widget build(BuildContext context) {
-    // Create a visual representation of the spacing using proportional scaling
-    // Maximum spacing value is 1920px, we'll scale to max 600px for better visibility
     const double maxDisplayWidth = 600.0;
     const double maxSpacingValue = 1920.0;
-    
+
     double displayWidth;
     if (value == 0) {
       displayWidth = 0.0;
     } else if (value <= 24) {
-      // For small values (0-24px), use actual size for precision
       displayWidth = value;
     } else {
-      // For larger values, use proportional scaling
-      // Scale from 24px to maxDisplayWidth based on the remaining range
       final remainingValue = value - 24;
       final remainingMax = maxSpacingValue - 24;
-      final scaledRemainingWidth = (remainingValue / remainingMax) * (maxDisplayWidth - 24);
+      final scaledRemainingWidth =
+          (remainingValue / remainingMax) * (maxDisplayWidth - 24);
       displayWidth = 24 + scaledRemainingWidth;
     }
-    
+
     return SizedBox(
       height: 16,
-      child: Stack(
-        children: [
-          // Bar (scaled spacing width) with gradient
-          if (value > 0)
-            Container(
-              width: displayWidth,
-              height: 16,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [
-                    Color(0xFFE040FA), // Left: 100% opacity
-                    Color(0xFF40C4FE), // Right: 100% opacity
-                  ],
-                ),
-              ),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: value == 0
+            ? const SizedBox.shrink()
+            : Container(
+          width: displayWidth,
+          height: 16,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [
+                Color(0xFFE040FA),
+                Color(0xFF40C4FE),
+              ],
             ),
-        ],
+          ),
+        ),
       ),
     );
   }

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../widgetbook_theme.dart';
 
+import 'package:flutter/material.dart';
+import '../widgetbook_theme.dart';
+
 class Setting extends StatelessWidget {
   const Setting({
     super.key,
@@ -18,44 +21,75 @@ class Setting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 24,
-        vertical: 12,
+    final theme = WidgetbookTheme.of(context);
+
+    final title = Text(
+      name,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: theme.textTheme.titleSmall!.copyWith(
+        color: theme.colorScheme.primary,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
+    );
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          // If the available width is tiny we avoid a Row and stack instead
+          final isNarrow = constraints.maxWidth < 180;
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(
-                child: Text(
-                  name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: WidgetbookTheme.of(context)
-                      .textTheme
-                      .titleSmall!
-                      .copyWith(
-                        color: WidgetbookTheme.of(context).colorScheme.primary,
+              if (trailing == null || !isNarrow)
+                Row(
+                  children: [
+                    Expanded(child: title),
+                    if (trailing != null) ...[
+                      const SizedBox(width: 8),
+                      //  trailing shrink instead of overflowing
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: trailing!,
+                          ),
+                        ),
                       ),
+                    ],
+                  ],
+                )
+              else
+              // Narrow: stack title over trailing to avoid overflow
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    title,
+                    const SizedBox(height: 8),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: trailing!,
+                    ),
+                  ],
                 ),
-              ),
-              if (trailing != null) ...{
-                const SizedBox(width: 8),
-                trailing!,
-              },
+
+              const SizedBox(height: 12),
+
+              if (description != null) ...[
+                Text(description!),
+                const SizedBox(height: 12),
+              ],
+
+              child,
             ],
-          ),
-          const SizedBox(height: 12),
-          if (description != null) ...{
-            Text(description!),
-            const SizedBox(height: 12),
-          },
-          child,
-        ],
+          );
+        },
       ),
     );
   }
 }
+

@@ -15,7 +15,7 @@ dependencies:
     path: ../
   markdown_widget: ^2.3.2+8
   url_launcher: ^6.3.2
-
+  auto_size_text: ^3.0.0
   #dependency_overrides:
   widgetbook:
     path: ../third_party/widgetbook-3.14.3

@@ -28,7 +28,7 @@ Widget buildUiTextStylesUseCase(BuildContext context) {
                   title: "Typography",
                 ),
                 const SizedBox(height: UiSpacing.spacing4),
-                
+
                 // Description section using the reusable component
                 UnpingUiWidgetbookDescription(
                   description: 'Our typography is designed to be clean, legible, and versatile across all screen sizes and devices. We have carefully selected a range of typographic styles to ensure consistency and readability in various contexts. Our font choices are optimized for both digital and print media, making sure that our text is always readable and well-emphasized.\n\n Font Family: Outfit',
@@ -43,9 +43,9 @@ Widget buildUiTextStylesUseCase(BuildContext context) {
             children: [
               // Typeface showcase
               _TypefaceShowcase(),
-              
+
               const SizedBox(height: 64),
-              
+
               // Typography scale sections
               _TypeScaleSection(
                 title: 'Display 2xl',
@@ -57,7 +57,7 @@ Widget buildUiTextStylesUseCase(BuildContext context) {
                   ('Display 2xl', 'Bold', UiTextStyles.display2xlBold),
                 ],
               ),
-              
+
               _TypeScaleSection(
                 title: 'Display xl',
                 subtitle: 'Font size: 60px / 3.75rem | Line height: 72px / 4.625rem | Tracking: -2%',
@@ -68,7 +68,7 @@ Widget buildUiTextStylesUseCase(BuildContext context) {
                   ('Display xl', 'Bold', UiTextStyles.displayXlBold),
                 ],
               ),
-              
+
               _TypeScaleSection(
                 title: 'Display lg',
                 subtitle: 'Font size: 48px / 3rem | Line height: 60px / 3.75rem | Tracking: -2%',
@@ -79,7 +79,7 @@ Widget buildUiTextStylesUseCase(BuildContext context) {
                   ('Display lg', 'Bold', UiTextStyles.displayLgBold),
                 ],
               ),
-              
+
               _TypeScaleSection(
                 title: 'Display md',
                 subtitle: 'Font size: 36px / 2.25rem | Line height: 44px / 2.75rem | Tracking: -2%',
@@ -90,7 +90,7 @@ Widget buildUiTextStylesUseCase(BuildContext context) {
                   ('Display md', 'Bold', UiTextStyles.displayMdBold),
                 ],
               ),
-              
+
               _TypeScaleSection(
                 title: 'Display sm',
                 subtitle: 'Font size: 30px / 1.875rem | Line height: 38px / 2.375rem',
@@ -101,7 +101,7 @@ Widget buildUiTextStylesUseCase(BuildContext context) {
                   ('Display sm', 'Bold', UiTextStyles.displaySmBold),
                 ],
               ),
-              
+
               _TypeScaleSection(
                 title: 'Display xs',
                 subtitle: 'Font size: 24px / 1.5rem | Line height: 32px / 2rem',
@@ -112,7 +112,7 @@ Widget buildUiTextStylesUseCase(BuildContext context) {
                   ('Display xs', 'Bold', UiTextStyles.displayXsBold),
                 ],
               ),
-              
+
               _TypeScaleSection(
                 title: 'Text xl',
                 subtitle: 'Font size: 20px / 1.25rem | Line height: 30px / 1.875rem',
@@ -123,7 +123,7 @@ Widget buildUiTextStylesUseCase(BuildContext context) {
                   ('Text xl', 'Bold', UiTextStyles.textXlBold),
                 ],
               ),
-              
+
               _TypeScaleSection(
                 title: 'Text lg',
                 subtitle: 'Font size: 18px / 1.125rem | Line height: 28px / 1.75rem',
@@ -134,7 +134,7 @@ Widget buildUiTextStylesUseCase(BuildContext context) {
                   ('Text lg', 'Bold', UiTextStyles.textLgBold),
                 ],
               ),
-              
+
               _TypeScaleSection(
                 title: 'Text md',
                 subtitle: 'Font size: 16px / 1rem | Line height: 24px / 1.5rem',
@@ -145,7 +145,7 @@ Widget buildUiTextStylesUseCase(BuildContext context) {
                   ('Text md', 'Bold', UiTextStyles.textMdBold),
                 ],
               ),
-              
+
               _TypeScaleSection(
                 title: 'Text small',
                 subtitle: 'Font size: 14px / 0.875rem | Line height: 20px / 1.25rem',
@@ -156,7 +156,7 @@ Widget buildUiTextStylesUseCase(BuildContext context) {
                   ('Text sm', 'Bold', UiTextStyles.textSmBold),
                 ],
               ),
-              
+
               // Text sm underline variant
               Container(
                 width: double.infinity,
@@ -182,7 +182,7 @@ Widget buildUiTextStylesUseCase(BuildContext context) {
                   ],
                 ),
               ),
-              
+
               _TypeScaleSection(
                 title: 'Text xs',
                 subtitle: 'Font size: 12px / 0.75rem | Line height: 18px / 1.125rem',
@@ -193,7 +193,7 @@ Widget buildUiTextStylesUseCase(BuildContext context) {
                   ('Text xs', 'Bold', UiTextStyles.textXsBold),
                 ],
               ),
-              
+
               const SizedBox(height: 225), // Bottom padding
             ],
           ),
@@ -266,59 +266,84 @@ class _TypeScaleSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 2240,
+      // let it be as wide as its parent
+      width: double.infinity,
       margin: const EdgeInsets.only(bottom: 64),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header with title and specs
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   Responsive header
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final isNarrow = constraints.maxWidth < 720;
+
+              final titleText = Text(
+                title,
+                style: UiTextStyles.textMd.copyWith(color: const Color(0xFF667085)),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                softWrap: false,
+              );
+
+              final subtitleText = Text(
+                subtitle,
+                style: UiTextStyles.textMd.copyWith(color: const Color(0xFF667085)),
+                maxLines: isNarrow ? 3 : 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: isNarrow ? TextAlign.left : TextAlign.right,
+              );
+
+              if (isNarrow) {
+                // Stack title above subtitle on small widths
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    titleText,
+                    const SizedBox(height: 8),
+                    subtitleText,
+                    const SizedBox(height: 16),
+                    Container(height: 1, width: double.infinity,
+                      color: const Color(0xFF667085).withValues(alpha: 0.3),
+                    ),
+                  ],
+                );
+              }
+
+
+              return Column(
                 children: [
-                  Text(
-                    title,
-                    style: UiTextStyles.textMd.copyWith(
-                      color: const Color(0xFF667085),
-                    ),
+                  Row(
+                    children: [
+                      Expanded(child: titleText),
+                      const SizedBox(width: 16),
+                      Expanded(child: Align(
+                        alignment: Alignment.centerRight,
+                        child: subtitleText,
+                      )),
+                    ],
                   ),
-                  Text(
-                    subtitle,
-                    style: UiTextStyles.textMd.copyWith(
-                      color: const Color(0xFF667085),
-                    ),
+                  const SizedBox(height: 16),
+                  Container(height: 1, width: double.infinity,
+                    color: const Color(0xFF667085).withValues(alpha: 0.3),
                   ),
                 ],
-              ),
-              const SizedBox(height: 16),
-              Container(
-                height: 1,
-                width: double.infinity,
-                color: const Color(0xFF667085).withValues(alpha: 0.3),
-              ),
-            ],
+              );
+            },
           ),
-          
+           
+
           const SizedBox(height: 32),
-          
-          // Style examples row
+
+          // Style examples row (already uses Expanded per item)
           Row(
             children: styles.map((style) {
               return Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      style.$1,
-                      style: style.$3.copyWith(color: Colors.white),
-                    ),
-                    SizedBox(height: style.$3.fontSize! * 1.0),
-                    Text(
-                      style.$2,
-                      style: style.$3.copyWith(color: Colors.white),
-                    ),
+                    Text(style.$1, style: style.$3.copyWith(color: Colors.white)),
+                    SizedBox(height: (style.$3.fontSize ?? 16) * 1.0),
+                    Text(style.$2, style: style.$3.copyWith(color: Colors.white)),
                   ],
                 ),
               );
@@ -329,3 +354,4 @@ class _TypeScaleSection extends StatelessWidget {
     );
   }
 }
+

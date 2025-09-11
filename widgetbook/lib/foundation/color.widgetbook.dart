@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:unping_ui/unping_ui.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart';
@@ -224,22 +225,20 @@ class _ColorSwatch extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Left half - Color display
+          // Color chip
           Expanded(
             flex: 1,
             child: Container(
               height: 80,
-              decoration: BoxDecoration(
-                color: color,
-              ),
+              color: color,
             ),
           ),
-          // Right half - Text information
+          // Text panel
           Expanded(
             flex: 1,
             child: Container(
               height: 80,
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), // was 12
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -250,20 +249,24 @@ class _ColorSwatch extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
+                  AutoSizeText(
                     weight,
-                    style: UiTextStyles.textXsMedium.copyWith(
-                      color: UiColors.neutral900,
-                    ),
-                    textAlign: TextAlign.left,
+                    maxLines: 1,
+                    minFontSize: 8,
+                    stepGranularity: 0.5,
+                    style: UiTextStyles.textXsMedium.copyWith(color: UiColors.neutral900),
                   ),
-                  const SizedBox(height: 2), // Reduced spacing
-                  SelectableText(
+
+                  const SizedBox(height: 2),
+
+                  AutoSizeText(
                     '#${color.value.toRadixString(16).toUpperCase().substring(2)}',
-                    style: UiTextStyles.textXs.copyWith(
-                      color: UiColors.neutral500,
-                    )
+                    maxLines: 1,  // to prevent wrap
+                    minFontSize: 8,
+                    stepGranularity: 0.5,
+                    style: UiTextStyles.textXs.copyWith(color: UiColors.neutral500),
                   ),
                 ],
               ),
@@ -274,4 +277,5 @@ class _ColorSwatch extends StatelessWidget {
     );
   }
 }
+
 
