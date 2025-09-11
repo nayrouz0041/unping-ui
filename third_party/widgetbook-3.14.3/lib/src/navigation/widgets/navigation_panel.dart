@@ -50,9 +50,9 @@ class _NavigationPanelState extends State<NavigationPanel> {
 
     return LayoutBuilder(
       builder: (context, c) {
-        // Tweak breakpoints as you like.
+        // ── Responsiveness knobs ────────────────────────────────────────────────
         const narrowW = 140.0;     // collapse search UI
-        const tinyW = 96.0;        // even tighter paddings
+        const tinyW = 96.0;        // tighter paddings
         const hideFooterH = 380.0; // hide footer when very short
 
         final isNarrow = c.maxWidth < narrowW;
@@ -63,7 +63,8 @@ class _NavigationPanelState extends State<NavigationPanel> {
         final listHPad = EdgeInsets.symmetric(horizontal: isTiny ? 8 : 16);
         final footerPad = EdgeInsets.all(isTiny ? 4 : 8);
 
-        Widget search = isNarrow
+        // Collapsible search (button -> dialog on very narrow panels)
+        final search = isNarrow
             ? _CollapsedSearchButton(
           initial: query,
           onChanged: WidgetbookState.of(context).updateQuery,
@@ -74,39 +75,70 @@ class _NavigationPanelState extends State<NavigationPanel> {
           onCleared: () => WidgetbookState.of(context).updateQuery(''),
         );
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
+        // ── FIX: Replace Column+Expanded/ListView with CustomScrollView  ───────
+        // This prevents "RenderFlex overflowed" when the panel height is small:
+        // everything scrolls instead of trying to fit.
+        final children = filteredRoot.children ?? const <WidgetbookNode>[];
+
+        return CustomScrollView(
+          slivers: [
             if (widget.header != null)
-              Padding(padding: allPad, child: widget.header!),
+              SliverToBoxAdapter(
+                child: Padding(padding: allPad, child: widget.header!),
+              ),
 
-            Padding(padding: allPad, child: search),
+            SliverToBoxAdapter(
+              child: Padding(padding: allPad, child: search),
+            ),
 
-            if (filteredRoot.children != null)
-              Expanded(
-                child: ListView.builder(
-                  padding: listHPad,
-                  itemCount: filteredRoot.children!.length,
-                  itemBuilder: (context, index) => NavigationTreeNode(
-                    node: filteredRoot.children![index],
-                    selectedNode: selectedNode,
-                    onNodeSelected: (node) {
-                      if (!node.isLeaf || node.path == selectedNode?.path) return;
-                      setState(() => selectedNode = node);
-                      widget.onNodeSelected?.call(node);
-                    },
+            if (children.isNotEmpty)
+              SliverPadding(
+                padding: listHPad,
+                sliver: SliverList.separated(
+                  itemCount: children.length,
+                  itemBuilder: (context, index) {
+                    final node = children[index];
+                    return NavigationTreeNode(
+                      node: node,
+                      selectedNode: selectedNode,
+                      onNodeSelected: (n) {
+                        if (!n.isLeaf || n.path == selectedNode?.path) return;
+                        setState(() => selectedNode = n);
+                        widget.onNodeSelected?.call(n);
+                      },
+                    );
+                  },
+                  separatorBuilder: (_, __) => const SizedBox(height: 4),
+                ),
+              )
+            else
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: allPad,
+                  child: Opacity(
+                    opacity: 0.6,
+                    child: _AutoText(
+                      'No matches',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   ),
                 ),
               ),
 
             if (!isShort)
-              Padding(
-                padding: footerPad,
-                child: StatsBanner(
-                  componentsCount: WidgetbookState.of(context).root.componentsCount,
-                  useCasesCount: WidgetbookState.of(context).root.useCasesCount,
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: footerPad,
+                  child: StatsBanner(
+                    componentsCount:
+                    WidgetbookState.of(context).root.componentsCount,
+                    useCasesCount:
+                    WidgetbookState.of(context).root.useCasesCount,
+                  ),
                 ),
               ),
+            // Give a little breathing room at the bottom so last item isn't flush
+            const SliverToBoxAdapter(child: SizedBox(height: 8)),
           ],
         );
       },
@@ -137,7 +169,10 @@ class _CollapsedSearchButton extends StatelessWidget {
           final result = await showDialog<String>(
             context: context,
             builder: (ctx) => AlertDialog(
-              title: const Text('Search'),
+              title: _AutoText(
+                'Search',
+                style: Theme.of(ctx).textTheme.titleMedium,
+              ),
               content: TextField(
                 controller: controller,
                 autofocus: true,
@@ -149,17 +184,49 @@ class _CollapsedSearchButton extends StatelessWidget {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(ctx).pop(''),
-                  child: const Text('Clear'),
+                  child: const _AutoText('Clear'),
                 ),
                 FilledButton(
                   onPressed: () => Navigator.of(ctx).pop(controller.text),
-                  child: const Text('Apply'),
+                  child: const _AutoText('Apply'),
                 ),
               ],
             ),
           );
           if (result != null) onChanged(result);
         },
+      ),
+    );
+  }
+}
+
+/// Lightweight auto-sizing text that scales down to fit its box.
+/// Useful for very narrow sidebars and dialog buttons/titles.
+class _AutoText extends StatelessWidget {
+  const _AutoText(
+      this.data, {
+        this.style,
+        this.maxLines = 1,
+        this.textAlign,
+      });
+
+  final String data;
+  final TextStyle? style;
+  final int maxLines;
+  final TextAlign? textAlign;
+
+  @override
+  Widget build(BuildContext context) {
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.centerLeft,
+      child: Text(
+        data,
+        maxLines: maxLines,
+        overflow: TextOverflow.ellipsis,
+        softWrap: false,
+        textAlign: textAlign,
+        style: style,
       ),
     );
   }
