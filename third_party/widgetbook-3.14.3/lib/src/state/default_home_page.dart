@@ -7,55 +7,67 @@ class DefaultHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Welcome to Widgetbook',
-              textAlign: TextAlign.center,
-              style: WidgetbookTheme.of(context).textTheme.displaySmall,
-            ),
-            const SizedBox(height: 24),
-            const Wrap(
-              children: [
-                _Card(
-                  title: '📖 Docs',
-                  url:
-                      'https://docs.widgetbook.io?utm_source=oss&utm_medium=home',
-                  description:
-                      'Learn more about knobs, addons, mocking, and more.',
-                ),
-                _Card(
-                  title: '📝 Examples',
-                  url:
-                      'https://github.com/widgetbook/widgetbook/tree/main/examples',
-                  description:
-                      'Explore the Widgetbook examples and learn how to use them.',
-                ),
-              ],
-            ),
-            const Wrap(
-              children: [
-                _Card(
-                  title: '🚀 Deploy',
-                  url:
-                      'https://docs.widgetbook.io/cloud/builds/overview?utm_source=oss&utm_medium=home',
-                  description:
-                      'Deploy your Widgetbook with our managed-hosting solution.',
-                ),
-                _Card(
-                  title: '✨ Detect Changes',
-                  url:
-                      'https://docs.widgetbook.io/cloud/reviews?utm_source=oss&utm_medium=home',
-                  description:
-                      'Detect visual changes in your PRs with Widgetbook Cloud.',
-                ),
-              ],
-            ),
-          ],
+        child: ConstrainedBox(
+          // Helps prevent super-wide layouts on large screens.
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Welcome to Widgetbook',
+                textAlign: TextAlign.center,
+                style: WidgetbookTheme.of(context).textTheme.displaySmall,
+              ),
+              const SizedBox(height: 24),
+              const Wrap(
+                spacing: 16,
+                runSpacing: 16,
+                alignment: WrapAlignment.center,
+                children: [
+                  _Card(
+                    title: '📖 Docs',
+                    url:
+                    'https://docs.widgetbook.io?utm_source=oss&utm_medium=home',
+                    description:
+                    'Learn more about knobs, addons, mocking, and more.',
+                  ),
+                  _Card(
+                    title: '📝 Examples',
+                    url:
+                    'https://github.com/widgetbook/widgetbook/tree/main/examples',
+                    description:
+                    'Explore the Widgetbook examples and learn how to use them.',
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Wrap(
+                spacing: 16,
+                runSpacing: 16,
+                alignment: WrapAlignment.center,
+                children: [
+                  _Card(
+                    title: '🚀 Deploy',
+                    url:
+                    'https://docs.widgetbook.io/cloud/builds/overview?utm_source=oss&utm_medium=home',
+                    description:
+                    'Deploy your Widgetbook with our managed-hosting solution.',
+                  ),
+                  _Card(
+                    title: '✨ Detect Changes',
+                    url:
+                    'https://docs.widgetbook.io/cloud/reviews?utm_source=oss&utm_medium=home',
+                    description:
+                    'Detect visual changes in your PRs with Widgetbook Cloud.',
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -76,9 +88,7 @@ class _Card extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-      constraints: const BoxConstraints(
-        maxWidth: 360,
-      ),
+      constraints: const BoxConstraints(maxWidth: 360),
       child: Card(
         clipBehavior: Clip.hardEdge,
         shape: RoundedRectangleBorder(
@@ -99,15 +109,10 @@ class _Card extends StatelessWidget {
                   text: TextSpan(
                     style: WidgetbookTheme.of(context).textTheme.titleMedium,
                     children: [
-                      TextSpan(
-                        text: title,
-                      ),
+                      TextSpan(text: title),
                       const TextSpan(text: ' '),
                       const WidgetSpan(
-                        child: Icon(
-                          Icons.arrow_forward,
-                          size: 16,
-                        ),
+                        child: Icon(Icons.arrow_forward, size: 16),
                       ),
                     ],
                   ),
@@ -119,11 +124,11 @@ class _Card extends StatelessWidget {
                       .textTheme
                       .bodyMedium!
                       .copyWith(
-                        color: WidgetbookTheme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withAlpha(120),
-                      ),
+                    color: WidgetbookTheme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withAlpha(120),
+                  ),
                 ),
               ],
             ),
